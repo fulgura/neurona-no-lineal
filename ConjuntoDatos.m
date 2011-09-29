@@ -38,23 +38,23 @@ classdef ConjuntoDatos  < handle
         function clase = get.Clase(CD)
             clase = CD.Datos(:, CD.ColumnaClase);
         end
-%         
-%         function Mezclar(CD)
-%             
-%             mezcla = randperm(CD.CantidadPatrones);
-%             CD.Datos = CD.Datos(mezcla,:);
-%             
-%         end
-%         
-%         function Escalar(CD)
-%             
-%             for index=CD.ColumnaDesdeAtributos:CD.ColumnaHastaAtributos
-%                 minimo = min(CD.Datos(:, index));
-%                 maximo = max(CD.Datos(:, index));
-%                 CD.Datos(:,index) = ((CD.Datos(:,index) - minimo) ./ (maximo - minimo));
-%             end
-%             
-%         end
+        
+        function obj = Mezclar(obj)
+            
+            mezcla = randperm(obj.CantidadPatrones);
+            obj.Datos = obj.Datos(mezcla,:);
+            
+        end
+        %
+        %         function Escalar(CD)
+        %
+        %             for index=CD.ColumnaDesdeAtributos:CD.ColumnaHastaAtributos
+        %                 minimo = min(CD.Datos(:, index));
+        %                 maximo = max(CD.Datos(:, index));
+        %                 CD.Datos(:,index) = ((CD.Datos(:,index) - minimo) ./ (maximo - minimo));
+        %             end
+        %
+        %         end
     end
     
 end
