@@ -1,4 +1,4 @@
-classdef ConjuntoDatos
+classdef ConjuntoDatos  < handle
     %CONJUNTODATOS Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -30,6 +30,7 @@ classdef ConjuntoDatos
             [CD.CantidadPatrones, CD.CantidadAtributos] = size(CD.Datos);
             
         end
+        
         function patrones = get.Patrones(CD)
             patrones = CD.Datos(:, CD.ColumnaDesdeAtributos:CD.ColumnaHastaAtributos);
         end
@@ -37,22 +38,23 @@ classdef ConjuntoDatos
         function clase = get.Clase(CD)
             clase = CD.Datos(:, CD.ColumnaClase);
         end
-        
-        function Mezclar(CD)
-            
-            mezcla = randperm(CD.CantidadPatrones)
-            CD.Datos = CD.Datos(mezcla,:);
-        end
-        
-        function Escalar(CD)
-            
-            for index=CD.ColumnaDesdeAtributos:CD.ColumnaHastaAtributos
-                minimo = min(CD.Datos(:, index));
-                maximo = max(CD.Datos(:, index));
-                CD.Datos(:,index) = ((CD.Datos(:,index) - minimo) ./ (maximo - minimo));
-            end
-            
-        end
+%         
+%         function Mezclar(CD)
+%             
+%             mezcla = randperm(CD.CantidadPatrones);
+%             CD.Datos = CD.Datos(mezcla,:);
+%             
+%         end
+%         
+%         function Escalar(CD)
+%             
+%             for index=CD.ColumnaDesdeAtributos:CD.ColumnaHastaAtributos
+%                 minimo = min(CD.Datos(:, index));
+%                 maximo = max(CD.Datos(:, index));
+%                 CD.Datos(:,index) = ((CD.Datos(:,index) - minimo) ./ (maximo - minimo));
+%             end
+%             
+%         end
     end
     
 end
