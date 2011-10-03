@@ -55,6 +55,11 @@ classdef ConjuntoDatos  < handle
             end
             
         end
+        function Recargar(CD)
+            CD.Datos = csvread(CD.NombreArchivo);
+            [CD.CantidadPatrones, CD.CantidadAtributos] = size(CD.Datos);
+            
+        end
     end
     
 end
