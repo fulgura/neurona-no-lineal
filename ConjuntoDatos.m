@@ -60,6 +60,15 @@ classdef ConjuntoDatos  < handle
             [CD.CantidadPatrones, CD.CantidadAtributos] = size(CD.Datos);
             
         end
+        function [Training Test] = separar(CD)
+            sizeM = size(CD.Datos);
+            CantPatrones = sizeM(1);
+            
+            n = floor(CantPatrones*percentaje);
+            
+            Training = M(1:n,:);
+            Test = M((n+1):CantPatrones,:);
+        end
     end
     
 end
