@@ -45,7 +45,7 @@ classdef Adalaine  < handle
             
             error_Ant = 0
             funcionEvaluada = tansig(W * obj.Patrones + b)
-            feval_aplicada = feval ( obj.Funcion, W * obj.Patrones + b)
+            feval_aplicada = feval ( obj.Funcion, T )
             error_Act = sum((obj.Clase - funcionEvaluada)).^2 / obj.CantidadPatrones
             ite = 0
             
