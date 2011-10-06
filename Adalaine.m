@@ -39,39 +39,45 @@ classdef Adalaine  < handle
             clase = obj.Clase;
         end
         
-        function [W b] = Calcular(obj)
+        function [W b iteracion] = Calcular(obj)
             
             W = rand(1, obj.CantidadEntradas);
             b = rand;
             
             
-            error_Ant = 0;
+            errorAnterior = 0;
             feval_aplicada = feval ( obj.Funcion, W * obj.Patrones + b);
             error_Act = sum((obj.Clase - feval_aplicada)).^2 / obj.CantidadPatrones;
-            ite = 0;
+            iteracion = 0;
             
-            while (ite < obj.MaxIteracion) & (abs(error_Act - error_Ant) > obj.Cota)
+            while (iteracion < obj.MaxIteracion) & (abs(error_Act - errorAnterior) > obj.Cota)
                 
-                ite = ite + 1;
-                error_Ant = error_Act;
+                iteracion = iteracion + 1;
+                errorAnterior = error_Act;
                 suma_error = 0;
                 
+                % Para cada vector de entrada
                 for patr = 1 : obj.CantidadPatrones
                     
-                    salida = feval ( obj.Funcion, W * obj.Patrones(:,patr) + b);
+                    % Aplicamos el vector de entrada, X sub k
+                    salida = feval ( obj.Funcion, W * obj.Patrones(:,patr) + b); 
                     errorK = obj.Clase(patr) - salida;
                     
-                    gradiente = -2 * errorK * (1 - salida^2) * obj.Patrones(:, patr);%ir al reves del gradiente
+                    derivada = feval ( [ 'd' obj.Funcion ],   W * obj.Patrones(:,patr) + b, salida );
                     
+                    % Calcular el gradiente utilizando -2 Error(t) * X
+                    gradiente = -2 * errorK * derivada * obj.Patrones(:, patr);
+                    
+                    %Actualizar el vector de pesos W(t+1) + 2 uEX
                     W = W - obj.Alfa * gradiente';  % tenemos que cambiarle el signo
-                    b = b - obj.Alfa * (-2*errorK*(1 - salida^2));
+                    b = b - obj.Alfa * (-2 * errorK * derivada);
                     
                     suma_error = suma_error + errorK^2;
                     
                 end
                 
                 error_Act = suma_error / obj.CantidadPatrones;
-                [error_Act error_Ant (error_Act - error_Ant) ite]
+                [error_Act errorAnterior (error_Act - errorAnterior) iteracion]
                 
             end
             

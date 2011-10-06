@@ -2,8 +2,9 @@ clear
 clear all
 clc
 
+dataset = csvread('sample.csv');
 
-C = ConjuntoDatos('sample.csv', 1, 2, 3);
+C = ConjuntoDatos(dataset, 1, 2, 3);
 C.Clase
 C.Patrones
 C.Datos

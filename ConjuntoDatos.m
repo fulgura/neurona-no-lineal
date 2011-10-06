@@ -4,7 +4,7 @@ classdef ConjuntoDatos  < handle
     
     % The following properties can be set only by class methods
     properties (SetAccess = private)
-        NombreArchivo
+        DatosOriginales
         ColumnaDesdeAtributos
         ColumnaHastaAtributos
         ColumnaClase
@@ -19,13 +19,13 @@ classdef ConjuntoDatos  < handle
         Clase
     end
     methods
-        function CD = ConjuntoDatos(NombreArchivo, ColumnaDesdeAtributos, ColumnaHastaAtributos, ColumnaClase)
-            CD.NombreArchivo = NombreArchivo;
+        function CD = ConjuntoDatos(DatosOriginales, ColumnaDesdeAtributos, ColumnaHastaAtributos, ColumnaClase)
+            CD.DatosOriginales = DatosOriginales;
             CD.ColumnaDesdeAtributos = ColumnaDesdeAtributos;
             CD.ColumnaHastaAtributos = ColumnaHastaAtributos;
             CD.ColumnaClase = ColumnaClase;
             
-            CD.Datos = csvread(CD.NombreArchivo);
+            CD.Datos = CD.DatosOriginales;
             
             [CD.CantidadPatrones, CD.CantidadAtributos] = size(CD.Datos);
             
@@ -56,7 +56,7 @@ classdef ConjuntoDatos  < handle
             
         end
         function Recargar(CD)
-            CD.Datos = csvread(CD.NombreArchivo);
+            CD.Datos = CD.DatosOriginales;
             [CD.CantidadPatrones, CD.CantidadAtributos] = size(CD.Datos);
             
         end

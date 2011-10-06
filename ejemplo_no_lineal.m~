@@ -1,12 +1,12 @@
 clear
 clc
 %==========  Areas de grafico ===========
-figure(1),
+figure(1), 
 set(1,'Position',[400 400 700 300])
 
 %====== muestras ======
 X = [ 2 3 1 3 0 2 -1 2 ;
-    2 1 0 3 1 4  1 5 ];
+      2 1 0 3 1 4  1 5 ];
 T = [ 0 1 0 1 0 1  0 1 ]; %salida binaria para dibujar
 T2 = [ -1 1 -1 1 -1 1  -1 1 ]; % salida bipolar para tansig
 
@@ -18,33 +18,31 @@ Grafico3D(X,T,W,b, 'tansig');
 
 alfa = 0.05;
 MAX_ITE = 100;
-cota = 0.001;
+cota = 0.000001;
 
 error_Ant = 0;
 error_Act = sum((T2 - feval('tansig',W*X+b))).^2 / CantPatrones;
 ite = 0;
 
 while (ite < MAX_ITE) & (abs(error_Act - error_Ant) > cota)
-    
+
     ite = ite + 1;
     error_Ant = error_Act;
     suma_error = 0;
     
     for patr = 1 : CantPatrones
-        
+    
         salida = feval('tansig', W*X(:,patr) + b);
         errorK = T2(patr) - salida;
         
-        derivada = feval ( [ 'd' 'tansig' ],  W*X(:,patr) + b, salida );
-        
-        gradiente = -2 * errorK * derivada * X(:, patr);
+        gradiente = -2 * errorK * (1 - salida^2)*X(:, patr);
         
         
         W = W - alfa * gradiente';  % tenemos que cambiarle el signo
-        b = b - alfa * (-2 * errorK * derivada);
         
+        b = b - alfa * (-2 * errorK * (1 - salida^2) ); 
         suma_error = suma_error + errorK^2;
-        
+    
     end
     
     error_Act = suma_error / CantPatrones;
