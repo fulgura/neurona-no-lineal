@@ -70,14 +70,14 @@ classdef ConjuntoDatos  < handle
             [CD.CantidadPatrones, CD.CantidadAtributos] = size(CD.Datos);
             
         end
-        function [Training Test] = separar(CD)
+        function [Training Test] = Separar(CD,porcentaje)
             sizeM = size(CD.Datos);
             CantPatrones = sizeM(1);
             
-            n = floor(CantPatrones*percentaje);
+            n = floor(CantPatrones*porcentaje);
             
-            Training = M(1:n,:);
-            Test = M((n+1):CantPatrones,:);
+            Training = ConjuntoDatos(CD.Datos(1:n,:), CD.ColumnaDesdeAtributos, CD.ColumnaHastaAtributos, CD.ColumnaClase);
+            Test = ConjuntoDatos(CD.Datos((n+1):CantPatrones,:), CD.ColumnaDesdeAtributos, CD.ColumnaHastaAtributos, CD.ColumnaClase);
         end
     end
     

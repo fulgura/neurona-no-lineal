@@ -44,13 +44,13 @@ classdef Adalaine  < handle
             W = rand(1, obj.CantidadEntradas);
             b = rand;
             
-            Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
+%             Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
             
             errorAnterior = 0;
             feval_aplicada = feval ( obj.Funcion, W * obj.Patrones + b);
             error_Act = sum((obj.Clase - feval_aplicada)).^2 / obj.CantidadPatrones;
             iteracion = 0;
-            
+
             while (iteracion < obj.MaxIteracion) & (abs(error_Act - errorAnterior) > obj.Cota)
                 
                 iteracion = iteracion + 1;
@@ -60,31 +60,33 @@ classdef Adalaine  < handle
                 % Para cada vector de entrada
                 for patr = 1 : obj.CantidadPatrones
                     
+                    neta = W * obj.Patrones(:,patr) + b;
                     % Aplicamos el vector de entrada, X sub k
-                    salida = feval ( obj.Funcion, W * obj.Patrones(:,patr) + b);
-                    errorK = obj.Clase(patr) - salida;
+                    f_neta = feval ( obj.Funcion, neta); % es W * P
                     
-                    derivada = feval ( [ 'd' obj.Funcion ],   W * obj.Patrones(:,patr) + b, salida );
+                    errorK = obj.Clase(patr) - f_neta;
+                    
+                    f_prima_neta = feval ( [ 'd' obj.Funcion ], neta, f_neta );
                     
                     % Calcular el gradiente utilizando -2 Error(t) * X
-                    gradiente = -2 * errorK * derivada * obj.Patrones(:, patr);
+                    gradiente = -2 * errorK * f_prima_neta * obj.Patrones(:, patr);
                     
                     %Actualizar el vector de pesos W(t+1) + 2 uEX
                     W = W - obj.Alfa * gradiente';  % tenemos que cambiarle el signo
-                    b = b - obj.Alfa * (-2 * errorK * derivada);
+                    b = b - obj.Alfa * (-2 * errorK * f_prima_neta);
                     
                     suma_error = suma_error + errorK^2;
                     
                 end
                 
                 error_Act = suma_error / obj.CantidadPatrones;
-                [error_Act errorAnterior (error_Act - errorAnterior) iteracion]
-                Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
+                [error_Act errorAnterior abs(error_Act - errorAnterior) iteracion]
+%                 Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
             end
             
         end
         
-        function [Salidas IgualesExactas Parecidas] = CalcularResultados(obj, W, b)
+        function [Salidas IgualesExactas Parecidas] = CalcularResultadosTansig(obj, W, b)
             
             Salidas = feval ( obj.Funcion, W * obj.Patrones + b);
             unos = find(Salidas >= 0.8);

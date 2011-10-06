@@ -26,3 +26,10 @@ C.Datos
 C.Mezclar
 C.EscalarColumnas(2,2)
 C.Datos
+[Training Test] = C.Separar(0.8);
+Training.Patrones
+Test.Patrones
+
+Training.Clase
+Test.Clase
+
