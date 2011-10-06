@@ -11,16 +11,20 @@ T2 = [ -1 1 -1 1 -1 1  -1 1 ]; % salida bipolar para tansig
 
 [entradas, CantPatrones] = size(X);
 
-% b = 0.01; W = [0.01 0.01];
+b = 0.01; W = [0.01 0.01];
+% W = rand(1,4);     % W = [W1 W2 W3 W4]
+% b = rand;       % esto es el bias o W0
 
 Alfa = 0.05;
-MAX_ITE = 100;
-Cota = 0.0001;
+MAX_ITE = 1000;
+Cota = 0.001;
 
+b = 0.01; W = [0.01 0.01];
 
 A = Adalaine(X, T2, 'tansig', Alfa, MAX_ITE, Cota);
 [W b] = A.Calcular();
 
+ = tansig(W * X + b)
 salidas = feval ( A.Funcion, W * A.Patrones + b)
 unos = find(salidas >= 0.8);
 menosunos = find(salidas <= -0.8);

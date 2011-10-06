@@ -40,8 +40,10 @@ classdef Adalaine  < handle
         end
         
         function [W b] = Calcular(obj)
-            b = 0.01;
-            W = [0.01 0.01];
+            
+            W = rand(1, obj.CantidadEntradas);
+            b = rand;
+            
             
             error_Ant = 0;
             feval_aplicada = feval ( obj.Funcion, W * obj.Patrones + b);
@@ -56,14 +58,14 @@ classdef Adalaine  < handle
                 
                 for patr = 1 : obj.CantidadPatrones
                     
-                    salida = feval ( obj.Funcion, W * obj.Patrones(:,patr) + b);                    
+                    salida = feval ( obj.Funcion, W * obj.Patrones(:,patr) + b);
                     errorK = obj.Clase(patr) - salida;
                     
                     gradiente = -2 * errorK * (1 - salida^2) * obj.Patrones(:, patr);%ir al reves del gradiente
-
+                    
                     W = W - obj.Alfa * gradiente';  % tenemos que cambiarle el signo
                     b = b - obj.Alfa * (-2*errorK*(1 - salida^2));
-
+                    
                     suma_error = suma_error + errorK^2;
                     
                 end
