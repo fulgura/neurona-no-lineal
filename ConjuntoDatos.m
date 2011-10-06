@@ -55,6 +55,16 @@ classdef ConjuntoDatos  < handle
             end
             
         end
+        function EscalarColumnas(CD, ColumnaDesde, ColumnaHasta)
+            
+            for index=ColumnaDesde:ColumnaHasta
+                minimo = min(CD.Datos(:, index));
+                maximo = max(CD.Datos(:, index));
+                CD.Datos(:,index) = ((CD.Datos(:,index) - minimo) ./ (maximo - minimo));
+            end
+            
+        end
+        
         function Recargar(CD)
             CD.Datos = CD.DatosOriginales;
             [CD.CantidadPatrones, CD.CantidadAtributos] = size(CD.Datos);

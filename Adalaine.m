@@ -39,11 +39,12 @@ classdef Adalaine  < handle
             clase = obj.Clase;
         end
         
-        function [W b iteracion] = Calcular(obj)
+        function [W b iteracion] = Procesar(obj)
             
             W = rand(1, obj.CantidadEntradas);
             b = rand;
             
+            Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
             
             errorAnterior = 0;
             feval_aplicada = feval ( obj.Funcion, W * obj.Patrones + b);
@@ -60,7 +61,7 @@ classdef Adalaine  < handle
                 for patr = 1 : obj.CantidadPatrones
                     
                     % Aplicamos el vector de entrada, X sub k
-                    salida = feval ( obj.Funcion, W * obj.Patrones(:,patr) + b); 
+                    salida = feval ( obj.Funcion, W * obj.Patrones(:,patr) + b);
                     errorK = obj.Clase(patr) - salida;
                     
                     derivada = feval ( [ 'd' obj.Funcion ],   W * obj.Patrones(:,patr) + b, salida );
@@ -78,9 +79,22 @@ classdef Adalaine  < handle
                 
                 error_Act = suma_error / obj.CantidadPatrones;
                 [error_Act errorAnterior (error_Act - errorAnterior) iteracion]
-                
+                Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
             end
             
+        end
+        
+        function [Salidas IgualesExactas Parecidas] = CalcularResultados(obj, W, b)
+            
+            Salidas = feval ( obj.Funcion, W * obj.Patrones + b);
+            unos = find(Salidas >= 0.8);
+            menosunos = find(Salidas <= -0.8);
+            
+            Salidas(unos) = 1;
+            Salidas(menosunos) = -1;
+            
+            IgualesExactas = sum(obj.Clase == Salidas);
+            Parecidas = sum(abs(obj.Clase - Salidas) < 0.2);
         end
     end
 end
