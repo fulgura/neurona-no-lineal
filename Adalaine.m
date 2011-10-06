@@ -43,33 +43,35 @@ classdef Adalaine  < handle
             b = 0.01;
             W = [0.01 0.01];
             
-            error_Ant = 0
-            funcionEvaluada = tansig(W * obj.Patrones + b)
-            feval_aplicada = feval ( obj.Funcion, W * obj.Patrones + b)
-            error_Act = sum((obj.Clase - funcionEvaluada)).^2 / obj.CantidadPatrones
-            ite = 0
+            error_Ant = 0;
+            feval_aplicada = feval ( obj.Funcion, W * obj.Patrones + b);
+            error_Act = sum((obj.Clase - feval_aplicada)).^2 / obj.CantidadPatrones;
+            ite = 0;
             
-%             while (ite < obj.MaxIteracion) & (abs(error_Act - error_Ant) > obj.Cota)
-%                 
-%                 ite = ite + 1;
-%                 error_Ant = error_Act;
-%                 suma_error = 0;
-%                 
-%                 for patr = 1 : CantPatrones
-%                     
-%                     salida = tansig(W*X(:,patr) + b);
-%                     errorK = T2(patr) - salida;
-%                     gradiente = -2*errorK*(1 - salida^2)*X(:, patr);%ir al reves del gradiente
-%                     W = W - alfa * gradiente';  % tenemos que cambiarle el signo
-%                     b = b - alfa * (-2*errorK*(1 - salida^2));
-%                     suma_error = suma_error + errorK^2;
-%                     
-%                 end
-%                 
-%                 error_Act = suma_error / CantPatrones;
-%                 [(error_Act - error_Ant) ite]
-%                 
-%             end
+            while (ite < obj.MaxIteracion) & (abs(error_Act - error_Ant) > obj.Cota)
+                
+                ite = ite + 1;
+                error_Ant = error_Act;
+                suma_error = 0;
+                
+                for patr = 1 : obj.CantidadPatrones
+                    
+                    salida = feval ( obj.Funcion, W * obj.Patrones(:,patr) + b);                    
+                    errorK = obj.Clase(patr) - salida;
+                    
+                    gradiente = -2 * errorK * (1 - salida^2) * obj.Patrones(:, patr);%ir al reves del gradiente
+
+                    W = W - obj.Alfa * gradiente';  % tenemos que cambiarle el signo
+                    b = b - obj.Alfa * (-2*errorK*(1 - salida^2));
+
+                    suma_error = suma_error + errorK^2;
+                    
+                end
+                
+                error_Act = suma_error / obj.CantidadPatrones;
+                [error_Act error_Ant (error_Act - error_Ant) ite]
+                
+            end
             
         end
     end
