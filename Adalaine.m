@@ -44,13 +44,13 @@ classdef Adalaine  < handle
             W = rand(1, obj.CantidadEntradas);
             b = rand;
             
-%             Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
+            %             Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
             
             errorAnterior = 0;
             feval_aplicada = feval ( obj.Funcion, W * obj.Patrones + b);
             error_Act = sum((obj.Clase - feval_aplicada)).^2 / obj.CantidadPatrones;
             iteracion = 0;
-
+            
             while (iteracion < obj.MaxIteracion) & (abs(error_Act - errorAnterior) > obj.Cota)
                 
                 iteracion = iteracion + 1;
@@ -80,23 +80,24 @@ classdef Adalaine  < handle
                 end
                 
                 error_Act = suma_error / obj.CantidadPatrones;
-                [error_Act errorAnterior abs(error_Act - errorAnterior) iteracion]
-%                 Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
+                %[error_Act errorAnterior abs(error_Act - errorAnterior) iteracion]
+                %                 Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
             end
             
         end
-        
-        function [Salidas IgualesExactas Parecidas] = CalcularResultadosTansig(obj, W, b)
+    end
+    methods(Static)
+        function [Salidas IgualesExactas Parecidas] = CalcularResultadosTansig(Patrones, Clase, W, b)
             
-            Salidas = feval ( obj.Funcion, W * obj.Patrones + b);
+            Salidas = feval ('tansig', W * Patrones + b);
             unos = find(Salidas >= 0.8);
             menosunos = find(Salidas <= -0.8);
             
             Salidas(unos) = 1;
             Salidas(menosunos) = -1;
             
-            IgualesExactas = sum(obj.Clase == Salidas);
-            Parecidas = sum(abs(obj.Clase - Salidas) < 0.2);
+            IgualesExactas = sum(Clase == Salidas);
+            Parecidas = sum(abs(Clase - Salidas) < 0.2);
         end
     end
 end
