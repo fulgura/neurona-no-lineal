@@ -20,6 +20,9 @@ C.Clase
 C.Patrones
 C.Datos
 C.Escalar
+C.Mezclar
+C.Datos
+C.Mezclar
 C.Datos
 C.Recargar
 C.Datos

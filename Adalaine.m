@@ -15,6 +15,7 @@ classdef Adalaine  < handle
         Cota
         CantidadEntradas
         CantidadPatrones
+        Verbose
     end
     
     methods
@@ -27,6 +28,7 @@ classdef Adalaine  < handle
             obj.Alfa = Alfa;
             obj.MaxIteracion = MaxIteracion;
             obj.Cota = Cota;
+            obj.Verbose = false;
             [obj.CantidadEntradas, obj.CantidadPatrones] = size(obj.Patrones);
             
         end
@@ -43,8 +45,6 @@ classdef Adalaine  < handle
             
             W = rand(1, obj.CantidadEntradas);
             b = rand;
-            
-            %             Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
             
             errorAnterior = 0;
             feval_aplicada = feval ( obj.Funcion, W * obj.Patrones + b);
@@ -80,9 +80,11 @@ classdef Adalaine  < handle
                 end
                 
                 error_Act = suma_error / obj.CantidadPatrones;
-                Adalaine.CalcularResultadosTansig(obj.Patrones, obj.Clase', W, b);
-                %[error_Act errorAnterior abs(error_Act - errorAnterior) iteracion]
-                %                 Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
+                if obj.Verbose
+                    [Salidas IgualesExactas Parecidas] = Adalaine.CalcularResultadosTansig(obj.Patrones, obj.Clase, W, b);
+                    fprintf('%d,%1.4f,%1.6f,%d,%1.6f,%1.6f,%1.6f,%d,%d\n',iteracion, obj.Alfa, obj.Cota, obj.MaxIteracion, error_Act, errorAnterior, abs(error_Act - errorAnterior),IgualesExactas, Parecidas);
+                    
+                end
             end
             
         end
@@ -91,8 +93,8 @@ classdef Adalaine  < handle
         function [Salidas IgualesExactas Parecidas] = CalcularResultadosTansig(Patrones, Clase, W, b)
             
             Salidas = feval ('tansig', W * Patrones + b);
-            unos = find(Salidas >= 0.8);
-            menosunos = find(Salidas <= -0.8);
+            unos = Salidas >= 0.8;
+            menosunos = Salidas <= -0.8;
             
             Salidas(unos) = 1;
             Salidas(menosunos) = -1;

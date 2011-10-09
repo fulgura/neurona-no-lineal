@@ -22,6 +22,7 @@ adalaineDataset((adalaineDataset(:,7) ~= 1),7) = -1;
 
 ADS = ConjuntoDatos(adalaineDataset, 1, 6, 7);
 ADS.Escalar;
+
 Alfa = 0.03;
 MaxIteraciones = 1000;
 CotaError = 0.001;
