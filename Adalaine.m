@@ -80,6 +80,7 @@ classdef Adalaine  < handle
                 end
                 
                 error_Act = suma_error / obj.CantidadPatrones;
+                Adalaine.CalcularResultadosTansig(obj.Patrones, obj.Clase', W, b);
                 %[error_Act errorAnterior abs(error_Act - errorAnterior) iteracion]
                 %                 Grafico3D(obj.Patrones,obj.Clase,W,b, 'tansig');
             end
