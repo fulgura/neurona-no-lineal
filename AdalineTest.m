@@ -23,9 +23,11 @@ adalaineDataset((adalaineDataset(:,7) ~= 1),7) = -1;
 ADS = ConjuntoDatos(adalaineDataset, 1, 6, 7);
 ADS.Escalar;
 
-Alfa = 0.03;
-MaxIteraciones = 1000;
-CotaError = 0.001;
+
+%% Definimos los par?metros
+Alfa = 0.4;
+MaxIteraciones = 50;
+CotaError = 0.1;
 
 
 fprintf('Alfa,CotaError,MaxIteraciones,iteracion,Iguales Exactas,Parecidas,Iguales Exactas Test,Parecidas Test\n');
@@ -33,7 +35,7 @@ fprintf('Alfa,CotaError,MaxIteraciones,iteracion,Iguales Exactas,Parecidas,Igual
 
 [Training Test] = ADS.Separar(0.8);
 
-A = Adalaine(Training.Patrones', Training.Clase', 'tansig', Alfa, MaxIteraciones, CotaError);
+A = Adalaine(Training.Patrones', Training.Clase', 'tansig', 0.4, MaxIteraciones, CotaError);
 
 [W b iteracion] = A.Procesar();
 
