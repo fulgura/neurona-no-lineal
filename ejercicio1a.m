@@ -1,65 +1,43 @@
+%% Calculo de los mejores par?metros de la neurona no lineal.
+
 clear
+clear all
 clc
 
-X = [ 2 3 1 3 0 2 -1 2 ;
-      2 1 0 3 1 4  1 5 ];
-  
-T = [ 0 1 0 1 0 1  0 1 ]; %salida binaria para dibujar
+%Convertimos a tansig los datos
+adalaineDataset = csvread('drug5.csv');
+adalaineDataset((adalaineDataset(:,7) == 1),7) = 1;
+adalaineDataset((adalaineDataset(:,7) ~= 1),7) = -1;
 
-T2 = [ -1 1 -1 1 -1 1  -1 1 ]; % salida bipolar para tansig
-
-[entradas, CantPatrones] = size(X);
-
-b = 0.01; W = [0.01 0.01];
+%% Preparamos los datos para procesar. De lo aprendido en el TP sabemos que tenemos que escalar los datos.
+ADS = ConjuntoDatos(adalaineDataset, 1, 6, 7);
+ADS.Escalar
 
 
-func = 'tansig';
+%% Definimos los par?metros
+Alfa = 0.4;
+MaxIteraciones = 1000;
+CotaError = 0.001;
 
 
-alfa = 0.05;
-MAX_ITE = 10;
-cota = 0.01;
-error_Ant = 0;
+%% Empieza el experimento 
+fid = fopen('Ejercicio1.csv','w');
 
-error_Act = sum((T2 - tansig(W*X+b))).^2 / CantPatrones
-sum((T2 - feval ( func, W*X+b ))).^2 / CantPatrones
-
-ite = 0;
-
-while (ite < MAX_ITE) & (abs(error_Act - error_Ant) > cota)
-
-    ite = ite + 1;
-    error_Ant = error_Act;
-    suma_error = 0;
+for i = 1 : 10
     
-    for patr = 1 : CantPatrones
+    ADS.Mezclar;
+    [Training Test] = ADS.Separar(0.8);
+    A = Adalaine(Training.Patrones', Training.Clase', 'tansig', 0.4, 1000, 0.0001);
     
-        salida = tansig(W*X(:,patr) + b);
-        errorK = T2(patr) - salida;
-        gradiente = -2*errorK*(1 - salida^2)*X(:, patr);%ir al reves del gradiente
-        W = W - alfa * gradiente';  % tenemos que cambiarle el signo
-        b = b - alfa * (-2*errorK*(1 - salida^2)); 
-        suma_error = suma_error + errorK^2;
+    [W b iteracion] = A.Procesar();
     
-    end
+    [Salidas IgualesExactas Parecidas] = Adalaine.CalcularResultadosTansig(Training.Patrones', Training.Clase', W, b);
+    [SalidasTest IgualesExactasTest ParecidasTest] = Adalaine.CalcularResultadosTansig(Test.Patrones', Test.Clase', W, b);
     
-    error_Act = suma_error / CantPatrones;
-    [(error_Act - error_Ant) ite]
+    fprintf(fid,'%1.4f,%1.6f,%d,%d,%d,%d,%d,%d\n', Alfa, CotaError, MaxIteraciones, iteracion, IgualesExactas, Parecidas,IgualesExactasTest,ParecidasTest);
+    fprintf('%1.4f,%1.6f,%d,%d,%d,%d,%d,%d\n', Alfa, CotaError, MaxIteraciones, iteracion, IgualesExactas, Parecidas,IgualesExactasTest,ParecidasTest);
     
 end
 
-
-% -- la neurona no lineal ya est? entrenada
-salidas = tansig(W*X+b);
-unos = find(salidas >= 0.8);
-menosunos = find(salidas <= -0.8);
-salidas(unos)=1;
-salidas(menosunos)=-1;
-
-IgualesExactas = sum(T2 == salidas)
-Parecidas = sum(abs(T2-salidas) < 0.2)
-
-
-
-
+fclose(fid)
 

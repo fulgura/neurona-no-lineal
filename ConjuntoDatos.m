@@ -30,15 +30,18 @@ classdef ConjuntoDatos  < handle
             [CD.CantidadPatrones, CD.CantidadAtributos] = size(CD.Datos);
             
         end
-        
+        %% Retorna la matriz de patrones utilizada para los calculos en la
+        % neurona no lineal
         function patrones = get.Patrones(CD)
             patrones = CD.Datos(:, CD.ColumnaDesdeAtributos:CD.ColumnaHastaAtributos);
         end
         
+        %% Retorna la el vector clase utilizado para los calculos en la
+        % neurona no linal
         function clase = get.Clase(CD)
             clase = CD.Datos(:, CD.ColumnaClase);
         end
-        
+        %%
         function Mezclar(obj)
             
             mezcla = randperm(obj.CantidadPatrones);
@@ -46,6 +49,7 @@ classdef ConjuntoDatos  < handle
             
         end
         
+        %%
         function Escalar(CD)
             
             for index=CD.ColumnaDesdeAtributos:CD.ColumnaHastaAtributos
@@ -55,6 +59,7 @@ classdef ConjuntoDatos  < handle
             end
             
         end
+        %%
         function EscalarColumnas(CD, ColumnaDesde, ColumnaHasta)
             
             for index=ColumnaDesde:ColumnaHasta
@@ -65,11 +70,13 @@ classdef ConjuntoDatos  < handle
             
         end
         
+        %%
         function Recargar(CD)
             CD.Datos = CD.DatosOriginales;
             [CD.CantidadPatrones, CD.CantidadAtributos] = size(CD.Datos);
             
         end
+        %%
         function [Training Test] = Separar(CD,porcentaje)
             sizeM = size(CD.Datos);
             CantPatrones = sizeM(1);
