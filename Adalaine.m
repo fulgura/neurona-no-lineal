@@ -40,7 +40,8 @@ classdef Adalaine  < handle
         function clase = get.Clase(obj)
             clase = obj.Clase;
         end
-        
+        %% Procesa los patrones y guarda el resultado de cada iteraci?n en
+        % un archivo.
         function [W b iteracion] = ProcesarGuardando(obj, filename)
             
             fid = fopen(filename,'w');
@@ -93,7 +94,8 @@ classdef Adalaine  < handle
             
             fclose(fid);
         end
-        
+        %% Procesa los patrones con los que fu? creada la neurona no
+        % lineal.
         function [W b iteracion] = Procesar(obj)
             
             W = rand(1, obj.CantidadEntradas);

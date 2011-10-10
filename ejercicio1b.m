@@ -18,10 +18,10 @@ ADS.Escalar
 Alfa = 0.2;
 MaxIteraciones = 2000;
 CotaError = 0.001;
-funcion = 'logsig';
+funcion = 'tansig';
 
 %% Empieza el experimento
-fid = fopen('Salidas/Ejercicio1b.csv','w');
+fid = fopen('Salidas/Ejercicio1a.csv','w');
 
 for i = 1 : 10
     
@@ -40,6 +40,5 @@ for i = 1 : 10
 end
 
 fclose(fid);
-
 fprintf('FIN\n');
 

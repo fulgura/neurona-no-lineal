@@ -41,7 +41,7 @@ classdef ConjuntoDatos  < handle
         function clase = get.Clase(CD)
             clase = CD.Datos(:, CD.ColumnaClase);
         end
-        %% Modifica el conjunto de datos desordenandolos en forma aleatoria
+        %%
         function Mezclar(obj)
             
             mezcla = randperm(obj.CantidadPatrones);
@@ -49,8 +49,7 @@ classdef ConjuntoDatos  < handle
             
         end
         
-        %% Hace el escalado de todas las columnas del conjunto de datos. 
-        % El escalado se hace calculando (x-min) / (maximo-minimo)
+        %%
         function Escalar(CD)
             
             for index=CD.ColumnaDesdeAtributos:CD.ColumnaHastaAtributos
@@ -60,7 +59,7 @@ classdef ConjuntoDatos  < handle
             end
             
         end
-        %% Hace el escalado de las columnas indicadas en los par?metros.
+        %% Hace el escala
         function EscalarColumnas(CD, ColumnaDesde, ColumnaHasta)
             
             for index=ColumnaDesde:ColumnaHasta
@@ -74,7 +73,7 @@ classdef ConjuntoDatos  < handle
         %% Vuelve a leer los datos con los que originalmente se creo la
         % instancia.
         % Los datos originales son guardados para poder voler a hacer
-        % modificaciones (escalado, mezclado, escalado por columnas)
+        % modificaciones (escalado, mezclado, )
         function Recargar(CD)
             CD.Datos = CD.DatosOriginales;
             [CD.CantidadPatrones, CD.CantidadAtributos] = size(CD.Datos);
