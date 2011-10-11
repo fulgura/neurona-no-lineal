@@ -15,13 +15,13 @@ ADS.Escalar
 
 
 %% Definimos los par?metros
-Alfa = 0.2;
+Alfa = 0.4;
 MaxIteraciones = 2000;
-CotaError = 0.001;
+CotaError = 0.0001;
 funcion = 'logsig';
 
 %% Empieza el experimento
-fid = fopen('Salidas/Ejercicio1b.csv','w');
+fid = fopen('Salidas/Ejercicio1a.csv','w');
 
 for i = 1 : 10
     
