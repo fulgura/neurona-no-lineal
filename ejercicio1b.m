@@ -23,6 +23,9 @@ funcion = 'tansig';
 %% Empieza el experimento
 fid = fopen('Salidas/Ejercicio1b.csv','w');
 
+fprintf(' Alfa, CotaError, MaxIteraciones, iteracion, Cantidad Patrones Training, Iguales Exactas Training, Parecidas Training,Eficiencia Training,Cantidad Patrones Test,Iguales Exactas Test,Parecidas Test, Eficiencia Test\n');
+fprintf(fid,' Alfa, CotaError, MaxIteraciones, iteracion, Cantidad Patrones Training, Iguales Exactas Training, Parecidas Training,Eficiencia Training,Cantidad Patrones Test,Iguales Exactas Test,Parecidas Test, Eficiencia Test\n');
+
 for i = 1 : 10
     
     ADS.Mezclar;
@@ -35,7 +38,9 @@ for i = 1 : 10
     [Salidas IgualesExactas Parecidas] = Adalaine.CalcularResultados(funcion, Training.Patrones', Training.Clase', W, b);
     [SalidasTest IgualesExactasTest ParecidasTest] = Adalaine.CalcularResultados(funcion, Test.Patrones', Test.Clase', W, b);
     
-    fprintf(fid,'%1.4f,%1.6f,%d,%d,%d,%d,%d,%d,%d,%d\n', Alfa, CotaError, MaxIteraciones, iteracion, Training.CantidadPatrones, IgualesExactas, Parecidas,Test.CantidadPatrones,IgualesExactasTest,ParecidasTest);
+    fprintf('%1.4f,%1.6f,%d,%d,%d,%d,%d,%1.4f,%d,%d,%d,%1.4f\n', Alfa, CotaError, MaxIteraciones, iteracion, Training.CantidadPatrones, IgualesExactas, Parecidas,IgualesExactas/Training.CantidadPatrones,Test.CantidadPatrones,IgualesExactasTest,ParecidasTest,IgualesExactasTest/Test.CantidadPatrones);
+    
+    fprintf(fid,'%1.4f,%1.6f,%d,%d,%d,%d,%d,%1.4f,%d,%d,%d,%1.4f\n', Alfa, CotaError, MaxIteraciones, iteracion, Training.CantidadPatrones, IgualesExactas, Parecidas,IgualesExactas/Training.CantidadPatrones,Test.CantidadPatrones,IgualesExactasTest,ParecidasTest,IgualesExactasTest/Test.CantidadPatrones);
     
 end
 
