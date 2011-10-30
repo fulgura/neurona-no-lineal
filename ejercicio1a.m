@@ -17,7 +17,7 @@ ADS.Escalar
 %% Definimos los par?metros
 Alfa = 0.4;
 MaxIteraciones = 2000;
-CotaError = 0.0001;
+CotaError = 0.00001;
 funcion = 'logsig';
 
 %% Empieza el experimento
