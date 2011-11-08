@@ -10,15 +10,33 @@ adalaineDataset((adalaineDataset(:,7) == 1),7) = 1;
 adalaineDataset((adalaineDataset(:,7) ~= 1),7) = -1;
 
 %% Preparamos los datos para procesar. De lo aprendido en el TP sabemos que tenemos que escalar los datos.
-ADS = ConjuntoDatos(adalaineDataset, 1, 6, 7);
-ADS.Escalar
+DatosOriginales = adalaineDataset;
+ColumnaDesdeAtributos = 1;
+ColumnaHastaAtributos = 6;
+ColumnaClase = 7;
+Datos = DatosOriginales;
+
+[CantidadPatrones, CantidadAtributos] = size(Datos);
+
+%% ADS = ConjuntoDatos(adalaineDataset, 1, 6, 7);
+patrones = Datos(:, ColumnaDesdeAtributos:ColumnaHastaAtributos);
+clase = Datos(:, ColumnaClase);
+
+
+%% ADS.Escalar
+for index=ColumnaDesdeAtributos:ColumnaHastaAtributos
+    minimo = min(Datos(:, index));
+    maximo = max(Datos(:, index));
+    Datos(:,index) = ((Datos(:,index) - minimo) ./ (maximo - minimo));
+end
+
 
 
 %% Definimos los par?metros
 Alfa = 0.4;
 MaxIteraciones = 2000;
 CotaError = 0.00001;
-funcion = 'logsig';
+Funcion = 'logsig';
 
 %% Empieza el experimento
 fid = fopen('Salidas/Ejercicio1a.csv','w');
@@ -28,33 +46,48 @@ fprintf(fid,' Alfa, CotaError, MaxIteraciones, iteracion, Cantidad Patrones Trai
 
 for i = 1 : 10
     
-    ADS.Mezclar;
-    [Training Test] = ADS.Separar(0.8);
+    %% ADS.Mezclar;
+    mezcla = randperm(CantidadPatrones);
+    Datos = Datos(mezcla,:);
     
-    A = Adalaine(Training.Patrones', Training.Clase', ...
-                    funcion, Alfa, MaxIteraciones, CotaError);
+    %% [Training Test] = ADS.Separar(0.8);
+    porcentaje = 0.8;
+    sizeM = size(Datos);
+    CantPatrones = sizeM(1);
+    n = floor(CantPatrones*porcentaje);
     
-    [W b iteracion] = A.Procesar();
+    Training = Datos(1:n,:);
+    sizeTraining = size(Training);
+    TrainingCantidadPatrones = sizeTraining(1);
     
-    [Salidas ...
-     IgualesExactas ...
-     Parecidas] = Adalaine.CalcularResultados(funcion, ...
-                                        Training.Patrones', ...
-                                        Training.Clase', ...
-                                        W, ...
-                                        b);
+    Test = Datos((n+1):CantPatrones,:);
+    sizeTest = size(Test);
+    TestCantidadPatrones = sizeTest(1);
+
+    %% A = Adalaine(Training.Patrones', Training.Clase', ...
+    %                funcion, Alfa, MaxIteraciones, CotaError);
+    % [W b iteracion] = A.Procesar();
+    
+    [W b iteracion] = AdalaineProcesar(Training(:,1:6)', Training(:,7)', Funcion, Alfa, MaxIteraciones, CotaError);
+    
+    
+    [Salidas IgualesExactas Parecidas] = AdalaineCalcularResultados(Funcion, ...
+                                                                    Training(:,1:6)', ...
+                                                                    Training(:,7)', ...
+                                                                    W, ...
+                                                                    b);
                                     
-    [SalidasTest ...
-     IgualesExactasTest ...
-     ParecidasTest] = Adalaine.CalcularResultados(funcion, ...
-                                                  Test.Patrones', ...
-                                                  Test.Clase', ...
-                                                  W, ...
-                                                  b);
-                                              
-    fprintf('%1.4f,%1.6f,%d,%d,%d,%d,%d,%1.4f,%d,%d,%d,%1.4f\n', Alfa, CotaError, MaxIteraciones, iteracion, Training.CantidadPatrones, IgualesExactas, Parecidas,IgualesExactas/Training.CantidadPatrones,Test.CantidadPatrones,IgualesExactasTest,ParecidasTest,IgualesExactasTest/Test.CantidadPatrones);
+    [SalidasTest IgualesExactasTest ParecidasTest] = AdalaineCalcularResultados(Funcion, ...
+                                                                              Test(:,1:6)', ...
+                                                                              Test(:,7)', ...
+                                                                              W, ...
+                                                                              b);
     
-    fprintf(fid,'%1.4f,%1.6f,%d,%d,%d,%d,%d,%1.4f,%d,%d,%d,%1.4f\n', Alfa, CotaError, MaxIteraciones, iteracion, Training.CantidadPatrones, IgualesExactas, Parecidas,IgualesExactas/Training.CantidadPatrones,Test.CantidadPatrones,IgualesExactasTest,ParecidasTest,IgualesExactasTest/Test.CantidadPatrones);
+    
+    
+    fprintf('%1.4f,%1.6f,%d,%d,%d,%d,%d,%1.4f,%d,%d,%d,%1.4f\n', Alfa, CotaError, MaxIteraciones, iteracion, TrainingCantidadPatrones, IgualesExactas, Parecidas,IgualesExactas/TrainingCantidadPatrones,TestCantidadPatrones,IgualesExactasTest,ParecidasTest,IgualesExactasTest/TestCantidadPatrones);
+    
+    fprintf(fid,'%1.4f,%1.6f,%d,%d,%d,%d,%d,%1.4f,%d,%d,%d,%1.4f\n', Alfa, CotaError, MaxIteraciones, iteracion, TrainingCantidadPatrones, IgualesExactas, Parecidas,IgualesExactas/TrainingCantidadPatrones,TestCantidadPatrones,IgualesExactasTest,ParecidasTest,IgualesExactasTest/TestCantidadPatrones);
     
 end
 
